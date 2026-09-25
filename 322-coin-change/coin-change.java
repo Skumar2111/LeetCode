@@ -1,42 +1,44 @@
 class Solution {
     public int coinChange(int[] coins, int amount) {
 
-        int n = coins.length;
+        int[] dp = new int[amount + 1];
 
-        int[][] dp = new int[n + 1][amount + 1];
+        Arrays.fill(dp, -1);
 
-        // amount > 0 cannot be formed with 0 coins
-        for (int j = 1; j <= amount; j++) {
-            dp[0][j] = Integer.MAX_VALUE;
+        int result = minChange(coins, amount, dp);
+        if (result == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return result;
+    }
+
+    public int minChange(int[] coins, int amount, int[] dp) {
+
+        if (amount == 0) {
+            return 0;
         }
 
-        // amount = 0 requires 0 coins
-        for (int i = 0; i <= n; i++) {
-            dp[i][0] = 0;
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
         }
 
-        for (int i = 1; i <= n; i++) {
+        if (dp[amount] != -1) {
+            return dp[amount];
+        }
 
-            for (int j = 1; j <= amount; j++) {
+        int min = Integer.MAX_VALUE;
 
-                // Exclude current coin
-                int exclude = dp[i - 1][j];
+        for (int coin : coins) {
+            int result = minChange(coins, amount - coin, dp);
 
-                // Include current coin
-                int include = Integer.MAX_VALUE;
-
-                if (coins[i - 1] <= j &&
-                    dp[i][j - coins[i - 1]] != Integer.MAX_VALUE) {
-
-                    include = 1 + dp[i][j - coins[i - 1]];
-                }
-
-                dp[i][j] = Math.min(include, exclude);
+            if (result != Integer.MAX_VALUE) {
+                int candidate = 1 + result;
+                min = Math.min(min, candidate);
             }
         }
 
-        return dp[n][amount] == Integer.MAX_VALUE
-                ? -1
-                : dp[n][amount];
+        dp[amount] = min;
+
+        return dp[amount];
     }
 }
