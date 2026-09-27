@@ -1,45 +1,41 @@
 class Solution {
     public int lastStoneWeightII(int[] stones) {
-        int totalSum = 0 ;
 
-        for(int stone : stones)
-        {
+        int totalSum = 0;
+
+        for (int stone : stones) {
             totalSum += stone;
         }
 
-        int target = (totalSum) / 2;
+        int target = totalSum / 2;
 
-        boolean dp[][] = new boolean[stones.length+1][target+1];
+        // dp[sum] = can we create this sum?
+        boolean[] dp = new boolean[target + 1];
 
-        dp[0][0] = true;
+        // We can always create sum 0 by taking nothing
+        dp[0] = true;
 
-        for(int i = 1 ; i <= stones.length ; i++)
-        {
-            int stone = stones[i-1];
+        for (int stone : stones) {
 
-            for(int sum = 0 ; sum <= target ; sum++)
-            {
-                //skip
-                dp[i][sum] = dp[i-1][sum];
+            // Go backwards so each stone is used only once
+            for (int sum = target; sum >= stone; sum--) {
 
-                if(sum >= stone)
-                {
-                    dp[i][sum] = dp[i-1][sum] || dp[i-1][sum - stone];
-                }
+                // Skip OR Take
+                dp[sum] = dp[sum] || dp[sum - stone];
             }
         }
 
+        // Find the largest achievable subset sum <= target
         int best = 0;
 
-        for(int sum = target ; sum >=0 ; sum--)
-        {
-            if(dp[stones.length][sum])
-            {
+        for (int sum = target; sum >= 0; sum--) {
+            if (dp[sum]) {
                 best = sum;
                 break;
             }
         }
 
+        // Difference between the two groups
         return totalSum - 2 * best;
     }
 }
