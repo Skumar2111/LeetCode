@@ -17,8 +17,7 @@ class Solution {
             adj.get(u).add(new Pair(v, weight));
         }
 
-        PriorityQueue<Pair> priorityQueue =
-                new PriorityQueue<>((a, b) -> Integer.compare(a.weight, b.weight));
+        PriorityQueue<Pair> priorityQueue = new PriorityQueue<>((a, b) -> Integer.compare(a.weight, b.weight));
 
         int[] distance = new int[n + 1];
 
@@ -53,8 +52,7 @@ class Solution {
                     distance[adjNode] = newDistance;
 
                     priorityQueue.add(
-                            new Pair(adjNode, newDistance)
-                    );
+                            new Pair(adjNode, newDistance));
                 }
             }
         }
