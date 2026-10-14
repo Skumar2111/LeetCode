@@ -41,16 +41,13 @@ class Solution {
                     queue.add(v);
                 }
             }
-
             count++;
         }
-
 
         if(count == numCourses)
         {
             return true;
         }
-
         return false;
 
     }
